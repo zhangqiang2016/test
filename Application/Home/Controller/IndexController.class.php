@@ -48,4 +48,47 @@ class IndexController extends Controller {
             return false;
         }
     }
+
+    public function monkeyTest() {
+        try {
+            $num = I('num');
+            $iden = I('iden');
+            if (empty($num) || empty($iden)) {
+                throw new \Exception("参数不全", 10002);
+            }
+
+            $monkeys = range(1, $num);
+            for ($i = 0;; $i++) {
+                if (count($monkeys) > 1) {
+                    if (($i + 1) % $iden == 0) {
+                        unset($monkeys[$i]);
+                    } else {
+                        array_push($monkeys, $monkeys[$i]);
+                        unset($monkeys[$i]);
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            echo current($monkeys);
+            exit;
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+        }
+    }
+
+    public function hannuo($n, $x, $y, $z) {
+        if ($n == 1) {
+            echo 'move disk 1 from ' . $x . ' to ' . $z . "\n";
+        } else {
+            $this->hannuo($n - 1, $x, $z, $y);
+            echo 'move disk ' . $n . ' from ' . $x . ' to ' . $z . "\n";
+            $this->hannuo($n - 1, $y, $x, $z);
+        }
+    }
+
+    public function hannuoTest() {
+        $this->hannuo(10, 'A', 'B', 'C');
+    }
 }
